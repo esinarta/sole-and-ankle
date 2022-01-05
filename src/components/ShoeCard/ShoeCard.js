@@ -33,19 +33,25 @@ const ShoeCard = ({
 
   return (
     <Link href={`/shoe/${slug}`}>
-      <Wrapper>
-        <ImageWrapper>
-          <Image alt="" src={imageSrc} />
-        </ImageWrapper>
-        <Spacer size={12} />
-        <Row>
-          <Name>{name}</Name>
-          <Price>{formatPrice(price)}</Price>
-        </Row>
-        <Row>
-          <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
-        </Row>
-      </Wrapper>
+      <ImageWrapper>
+        {variant === 'on-sale' && (<SaleTag>Sale</SaleTag>)}
+        {variant === 'new-release' && (<NewTag>Just released!</NewTag>)}
+        <Image alt="" src={imageSrc} />
+      </ImageWrapper>
+      <Spacer size={12} />
+      <Row>
+        <Name>{name}</Name>
+        <Price style={{
+          '--color': variant === 'on-sale' ? COLORS.gray[700] : COLORS.black,
+          '--text-decoration': variant === 'on-sale' ? 'line-through' : 'none',
+        }}>{formatPrice(price)}</Price>
+      </Row>
+      <Row>
+        <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
+        {variant === 'on-sale' && (
+          <SalePrice>{formatPrice(salePrice)}</SalePrice>
+        )}
+      </Row>
     </Link>
   );
 };
@@ -55,16 +61,12 @@ const Link = styled.a`
   color: inherit;
 `;
 
-const Wrapper = styled.article`
-  margin: 36px;
-`;
-
 const ImageWrapper = styled.div`
   position: relative;
 `;
 
 const Image = styled.img`
-  width: 340px;
+  width: 100%;
   border-radius: 16px 16px 4px 4px;
 `;
 
@@ -80,7 +82,8 @@ const Name = styled.h3`
 `;
 
 const Price = styled.span`
-  text-decoration: line-through;
+  color: var(--color);
+  text-decoration: var(--text-decoration);
 `;
 
 const ColorInfo = styled.p`
@@ -91,5 +94,25 @@ const SalePrice = styled.span`
   font-weight: ${WEIGHTS.medium};
   color: ${COLORS.primary};
 `;
+
+const Tag = styled.div`
+  position: absolute;
+  top: 12px;
+  right: -4px;
+  height: 32px;
+  padding: 10px;
+  color: ${COLORS.white};
+  font-size: ${14 / 18}rem;
+  font-weight: ${WEIGHTS.bold};
+  border-radius: 2px;
+`
+
+const SaleTag = styled(Tag)`
+  background: ${COLORS.primary};
+`;
+
+const NewTag = styled(Tag)`
+  background: ${COLORS.secondary};
+`
 
 export default ShoeCard;

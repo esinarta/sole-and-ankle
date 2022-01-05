@@ -34,6 +34,7 @@ const Select = ({ label, value, children, ...delegated }) => {
 
 const Wrapper = styled.label`
   display: flex;
+  align-items: baseline;
 `;
 
 const VisibleLabel = styled.span`
